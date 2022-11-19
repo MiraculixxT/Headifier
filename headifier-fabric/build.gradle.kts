@@ -1,0 +1,4 @@
+
+plugins {
+    `fabric-mod-script`
+}

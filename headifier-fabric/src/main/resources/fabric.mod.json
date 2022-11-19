@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "headifier",
+  "version": "${version}",
+  "name": "Headifier",
+  "description": "Block Headifier - Turn solid Blocks into minified heads",
+  "authors": [
+    "Miraculixx"
+  ],
+  "contact": {
+    "homepage": "https://mutils.de/",
+    "issues": "https://mutils.de/dc",
+    "sources": "https://example.com/"
+  },
+  "license": "MIT",
+  "icon": "assets/mod_name/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "de.miraculixx.headifier.HeadifierFabric"
+      }
+    ]
+  },
+  "mixins": [
+    "headifier.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabricloader}",
+    "fabric-api": ">=${fabric_api}",
+    "fabric-language-kotlin": ">=${fabric_language_kotlin}",
+    "minecraft": ">=${minecraft}",
+    "java": ">=${java}"
+  }
+}
