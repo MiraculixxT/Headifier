@@ -14,7 +14,6 @@ repositories {
 dependencies {
     fun pluginDep(id: String, version: String) = "${id}:${id}.gradle.plugin:${version}"
     val kotlinVersion = "1.7.10"
-    val ktorVersion = "2.1.3"
 
     compileOnly(kotlin("gradle-plugin", embeddedKotlinVersion))
     runtimeOnly(kotlin("gradle-plugin", kotlinVersion))
@@ -28,8 +27,4 @@ dependencies {
     // Paper implementation
     implementation(pluginDep("io.papermc.paperweight.userdev", "1.3.9"))
     implementation(pluginDep("xyz.jpenilla.run-paper", "1.1.0"))
-
-    // Core
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
 }

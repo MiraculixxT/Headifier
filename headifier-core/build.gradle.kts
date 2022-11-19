@@ -1,5 +1,4 @@
 
 plugins {
-    //`fabric-loom`
-    // Throws error
+    `core-script`
 }

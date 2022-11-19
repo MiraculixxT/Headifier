@@ -2,8 +2,13 @@ import BuildConstants.minecraftVersion
 
 plugins {
     kotlin("jvm")
+    kotlin("plugin.serialization")
     id("io.papermc.paperweight.userdev")
     id("xyz.jpenilla.run-paper")
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
