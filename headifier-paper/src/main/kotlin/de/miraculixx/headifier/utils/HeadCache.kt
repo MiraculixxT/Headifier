@@ -1,3 +1,6 @@
 package de.miraculixx.headifier.utils
 
-val heads = HeadCache()
+import de.miraculixx.headifier.HeadCache
+import net.axay.kspigot.extensions.console
+
+val heads = HeadCache(console)

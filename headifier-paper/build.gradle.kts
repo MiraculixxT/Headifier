@@ -4,6 +4,5 @@ plugins {
 }
 
 dependencies {
-    
-    module("headifier.headifier-core.main")
+    implementation(project(":headifier-core"))
 }
