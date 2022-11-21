@@ -45,6 +45,7 @@ interface CustomInventory : MenuProvider {
      * @param player Target Player
      */
     fun open(player: Player) {
+        if (debug) consoleAudience?.sendMessage(prefix + cmp("Open GUI '$id' to ${player.scoreboardName}"))
         inventory.startOpen(player)
     }
 

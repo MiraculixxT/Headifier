@@ -65,7 +65,7 @@ class HeadCache(private val configFolder: File) {
                 withContext(Dispatchers.IO) {
                     if (debug) consoleAudience?.sendMessage(prefix + cmp("Creating config file: ${config.path}"))
                     config.createNewFile()
-                    config.writeText("[]")
+                    config.writeText("{}")
                 }
             }
 

@@ -50,5 +50,10 @@ object InventoryManager {
      * Use storage GUIs to display a lot of content with a minimal of placeholders. They can be filtered, scrollable and supports menus
      * @author Miraculixx
      */
-    inline fun inventoryBuilder(id: String, builder: CustomBuilder.Builder.() -> Unit) = add(id, CustomBuilder.Builder(id).apply(builder).build())
+    inline fun inventoryBuilder(id: String, builder: CustomBuilder.Builder.() -> Unit): CustomInventory {
+        println("?!?!")
+        val gui = CustomBuilder.Builder(id)
+        println("!!!")
+        return add(id, gui.apply(builder).build())
+    }
 }

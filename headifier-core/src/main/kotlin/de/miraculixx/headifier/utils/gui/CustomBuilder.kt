@@ -69,7 +69,14 @@ class CustomBuilder(
         /**
          * Internal use. No need to call it inlined
          */
-        fun build() = CustomBuilder(this)
+        fun build(): CustomInventory {
+            println("...")
+            return CustomBuilder(this)
+        }
+
+        init {
+            println("Hey")
+        }
     }
 
     private fun build() {
@@ -129,6 +136,7 @@ class CustomBuilder(
     }
 
     init {
+        println("1")
         if (viewers.isEmpty()) {
             consoleAudience?.sendMessage(prefix + cmp("Creating GUI without player - Unexpected behaviour", cError))
             InventoryManager.remove(id)

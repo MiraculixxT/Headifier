@@ -19,6 +19,7 @@ dependencies {
 }
 
 tasks {
+    cleanCache
     shadowJar {
         //minimize()
         dependencies {
@@ -26,7 +27,7 @@ tasks {
         }
     }
     assemble {
-        dependsOn(shadowJar)
+        //dependsOn(shadowJar)
         dependsOn(reobfJar)
     }
     compileJava {
