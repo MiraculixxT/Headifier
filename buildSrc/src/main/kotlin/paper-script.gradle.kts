@@ -19,7 +19,6 @@ dependencies {
 }
 
 tasks {
-    cleanCache
     shadowJar {
         //minimize()
         dependencies {
