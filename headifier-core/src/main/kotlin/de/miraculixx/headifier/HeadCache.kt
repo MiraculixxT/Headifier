@@ -16,7 +16,7 @@ import net.minecraft.world.item.Items
 import java.io.File
 import java.util.*
 
-class HeadCache(private val configFile: File) {
+class HeadCache(private val configFolder: File) {
     private var heads = emptyList<Head>()
     private var materialRegex = Regex("-|_")
     var ready = false
@@ -56,14 +56,20 @@ class HeadCache(private val configFile: File) {
             val responseDecoration = client.get("${mhAPI}cat=decoration&tags=true")
             val responsePlants = client.get("${mhAPI}cat=plants&tags=true")
 
-            if (!configFile.exists()) {
+            if (!configFolder.exists()) {
+                if (debug) consoleAudience?.sendMessage(prefix + cmp("Creating config folder: ${configFolder.path}"))
+                configFolder.mkdirs()
+            }
+            val config = File("${configFolder.path}/head-status.json")
+            if (!config.exists()) {
                 withContext(Dispatchers.IO) {
-                    configFile.createNewFile()
-                    configFile.writeText("[]")
+                    if (debug) consoleAudience?.sendMessage(prefix + cmp("Creating config file: ${config.path}"))
+                    config.createNewFile()
+                    config.writeText("[]")
                 }
             }
 
-            val status = json.decodeFromString<Map<String, Boolean>>(configFile.readText())
+            val status = json.decodeFromString<Map<String, Boolean>>(config.readText())
 
             heads = buildList {
                 addAll(filterResponse(responseBlocks.body(), status))

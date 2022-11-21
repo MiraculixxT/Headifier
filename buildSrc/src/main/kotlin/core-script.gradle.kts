@@ -1,8 +1,3 @@
-import gradle.kotlin.dsl.accessors._716a08d120ec896a570c442c28d24466.loom
-import gradle.kotlin.dsl.accessors._716a08d120ec896a570c442c28d24466.mappings
-import gradle.kotlin.dsl.accessors._716a08d120ec896a570c442c28d24466.minecraft
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.kotlin
 
 plugins {
     kotlin("jvm")

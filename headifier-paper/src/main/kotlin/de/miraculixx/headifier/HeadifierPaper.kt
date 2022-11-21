@@ -20,6 +20,7 @@ class HeadifierPaper: KSpigot() {
     override fun startup() {
         INSTANCE = this
 
+        debug = true
         consoleAudience = console
         val lateInitData = listOf(HeadifierCommand())
 
