@@ -27,4 +27,6 @@ dependencies {
     // Paper implementation
     implementation(pluginDep("io.papermc.paperweight.userdev", "1.3.9"))
     implementation(pluginDep("xyz.jpenilla.run-paper", "1.1.0"))
+
+    implementation(pluginDep("com.github.johnrengelman.shadow", "7.1.2"))
 }

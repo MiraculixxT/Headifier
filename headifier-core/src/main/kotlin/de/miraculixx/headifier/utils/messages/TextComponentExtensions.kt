@@ -5,6 +5,7 @@ import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.minecraft.server.level.ServerPlayer
 
 fun Component.decorate(bold: Boolean? = null, italic: Boolean? = null, strikethrough: Boolean? = null, underlined: Boolean? = null): Component {
     var finalComponent = this
@@ -48,6 +49,14 @@ fun commandSuggestions(prefix: String, vararg commands: String): Component {
         if (index != commands.size - 1) base + cmp(" - ")
     }
     return base
+}
+
+fun Component.toMC(): net.minecraft.network.chat.Component {
+    return net.minecraft.network.chat.Component.Serializer.fromJson(jsonSerializer.serialize(this)) ?: net.minecraft.network.chat.Component.empty()
+}
+
+fun net.minecraft.network.chat.Component.toAdventure(): Component {
+    return jsonSerializer.deserialize(net.minecraft.network.chat.Component.Serializer.toJson(this))
 }
 
 operator fun Component.plus(other: Component): Component {

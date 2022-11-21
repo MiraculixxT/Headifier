@@ -1,61 +1,84 @@
 package de.miraculixx.headifier
 
-import de.miraculixx.headifier.utils.messages.cError
-import de.miraculixx.headifier.utils.messages.cmp
-import de.miraculixx.headifier.utils.messages.plus
-import de.miraculixx.headifier.utils.messages.prefix
+import de.miraculixx.headifier.utils.gui.item.itemStack
+import de.miraculixx.headifier.utils.gui.item.setSkullTexture
+import de.miraculixx.headifier.utils.messages.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.json.Json
 import net.kyori.adventure.audience.Audience
+import net.minecraft.world.item.Items
+import java.io.File
+import java.util.*
 
-class HeadCache(private val consoleAudience: Audience) {
+class HeadCache(private val configFile: File) {
     private var heads = emptyList<Head>()
-    var success = true
+    private var materialRegex = Regex("-|_")
+    var ready = false
 
     fun getHeads(): List<Head> {
         return heads
     }
 
-    fun getHeads(material: String): List<Head> {
-        return heads.filter { head -> head.name.equals(material, true) }
+    fun getActivatedHeads(material: String): List<Head> {
+        return getHeads(material).filter { it.activated }
     }
 
-    private fun filterResponse(response: String): List<Head> {
-        val regex = Regex("\\{.*.}")
+    fun getHeads(material: String): List<Head> {
+        val key = material.replace(materialRegex, " ")
+        return heads.filter { head -> head.name.equals(key, true) }
+    }
+
+    private fun filterResponse(response: String, status: Map<String, Boolean>): List<Head> {
+        val regex = Regex("\\[.*.]")
         return if (response.matches(regex)) {
-            Json.decodeFromString<List<Head>>(response).filter {
+            json.decodeFromString<List<Head>>(response).filter {
                 it.tags.contains("Vanilla Block")
             }.map {
                 it.name = it.name.replace(Regex(".\\(.*\\).*"), "")
+                it.activated = status[it.uuid] ?: true
                 it
             }
         } else {
-            consoleAudience.sendMessage(prefix + cmp("Failed to load block set! https://minecraft-heads.com returned invalid data!", cError))
-            success = false
+            consoleAudience?.sendMessage(prefix + cmp("Failed to load block set! https://minecraft-heads.com returned invalid data!", cError))
             emptyList()
         }
     }
 
     init {
         CoroutineScope(Dispatchers.Default).launch {
-            val responseBlocks = client.get("https://minecraft-heads.com/scripts/api.php?cat=blocks&tags=true")
-            val responseDecoration = client.get("https://minecraft-heads.com/scripts/api.php?cat=decoration&tags=true")
-            val responsePlants = client.get("https://minecraft-heads.com/scripts/api.php?cat=plants&tags=true")
+            val responseBlocks = client.get("${mhAPI}cat=blocks&tags=true")
+            val responseDecoration = client.get("${mhAPI}cat=decoration&tags=true")
+            val responsePlants = client.get("${mhAPI}cat=plants&tags=true")
+
+            if (!configFile.exists()) {
+                withContext(Dispatchers.IO) {
+                    configFile.createNewFile()
+                    configFile.writeText("[]")
+                }
+            }
+
+            val status = json.decodeFromString<Map<String, Boolean>>(configFile.readText())
 
             heads = buildList {
-                addAll(filterResponse(responseBlocks.body()))
-                addAll(filterResponse(responseDecoration.body()))
-                addAll(filterResponse(responsePlants.body()))
+                addAll(filterResponse(responseBlocks.body(), status))
+                addAll(filterResponse(responseDecoration.body(), status))
+                addAll(filterResponse(responsePlants.body(), status))
             }
+
+            ready = true
         }
     }
 
     @Serializable
-    data class Head(var name: String, val value: String, val tags: String)
+    data class Head(var name: String, val value: String, val uuid: String, val tags: String, var activated: Boolean = true) {
+        fun getHead() = itemStack(Items.PLAYER_HEAD) {
+            setSkullTexture(value, UUID.fromString(uuid))
+        }
+    }
 }

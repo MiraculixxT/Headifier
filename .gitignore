@@ -1,5 +1,6 @@
 .gradle
 build/
+run/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -43,3 +44,5 @@ bin/
 .idea/discord.xml
 .idea/gradle.xml
 *.xml
+*.jar
+headifier-paper/run/libraries/com/mojang/brigadier/1.0.18/brigadier-1.0.18.jar

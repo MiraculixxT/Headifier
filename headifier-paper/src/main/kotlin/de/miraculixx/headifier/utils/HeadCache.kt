@@ -1,6 +1,7 @@
 package de.miraculixx.headifier.utils
 
 import de.miraculixx.headifier.HeadCache
-import net.axay.kspigot.extensions.console
+import de.miraculixx.headifier.PluginManager
+import java.io.File
 
-val heads = HeadCache(console)
+val headCache = HeadCache(File("${PluginManager.dataFolder.path}/head-status.json"))
