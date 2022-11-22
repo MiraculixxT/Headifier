@@ -6,7 +6,6 @@ import de.miraculixx.headifier.utils.gui.item.itemStack
 import de.miraculixx.headifier.utils.gui.item.setCustomName
 import de.miraculixx.headifier.utils.messages.*
 import net.kyori.adventure.text.Component
-import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Inventory
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.AbstractContainerMenu
@@ -19,11 +18,10 @@ class CustomBuilder(
     private val content: Map<ItemStack, Int>,
     private val title: Component,
     override val id: String,
-    player: List<Player>,
+    players: List<Player>,
     size: Int,
-) : SimpleContainer(size * 9), CustomInventory {
-    override val inventory = get()
-    override val viewers: MutableList<Player> = player.toMutableList()
+) : CustomInventory(size * 9) {
+    override val viewers: MutableList<Player> = mutableListOf()
 
     constructor(builder: CustomInventoryBuilder) : this(
         builder.content,
@@ -38,7 +36,7 @@ class CustomBuilder(
 
     private fun build() {
         content.forEach { (item, slot) ->
-            inventory.setItem(slot, item)
+            setItem(slot, item)
         }
     }
 
@@ -46,20 +44,20 @@ class CustomBuilder(
         val primaryPlaceholder = itemStack(Items.GRAY_STAINED_GLASS_PANE) { setCustomName(cmp(" ")) }
         val secondaryPlaceholder = itemStack(Items.BLACK_STAINED_GLASS_PANE) { setCustomName(cmp(" ")) }
 
-        val size = inventory.containerSize
+        val size = containerSize
         repeat(size) {
-            inventory.setItem(it, primaryPlaceholder)
+            setItem(it, primaryPlaceholder)
         }
         if (size != 9) {
-            inventory.setItem(17, secondaryPlaceholder)
-            inventory.setItem(size - 18, secondaryPlaceholder)
-            repeat(2) { inventory.setItem(it, secondaryPlaceholder) }
-            repeat(3) { inventory.setItem(it + 7, secondaryPlaceholder) }
-            repeat(3) { inventory.setItem(size - it - 8, secondaryPlaceholder) }
-            repeat(2) { inventory.setItem(size - it - 1, secondaryPlaceholder) }
+            setItem(17, secondaryPlaceholder)
+            setItem(size - 18, secondaryPlaceholder)
+            repeat(2) { setItem(it, secondaryPlaceholder) }
+            repeat(3) { setItem(it + 7, secondaryPlaceholder) }
+            repeat(3) { setItem(size - it - 8, secondaryPlaceholder) }
+            repeat(2) { setItem(size - it - 1, secondaryPlaceholder) }
         } else {
-            inventory.setItem(0, secondaryPlaceholder)
-            inventory.setItem(8, secondaryPlaceholder)
+            setItem(0, secondaryPlaceholder)
+            setItem(8, secondaryPlaceholder)
         }
     }
 
@@ -77,7 +75,7 @@ class CustomBuilder(
             5 -> MenuType.GENERIC_9x5
             else -> MenuType.GENERIC_9x6
         }
-        return ChestMenu(menuType, i, inventory, inventory, height)
+        return ChestMenu(menuType, i, inventory, this, height)
     }
 
     override fun stopOpen(player: Player) {
@@ -96,16 +94,14 @@ class CustomBuilder(
 
     init {
         println("init")
-        if (viewers.isEmpty()) {
+        if (players.isEmpty()) {
             consoleAudience?.sendMessage(prefix + cmp("Creating GUI without player - Unexpected behaviour", cError))
             InventoryManager.remove(id)
         } else {
-            println("fill placeholder")
             fillPlaceholder()
-            println("build")
             build()
             println("open")
-            open(viewers)
+            open(players)
         }
     }
 }
@@ -143,5 +139,8 @@ class CustomInventoryBuilder(val id: String) {
     /**
      * Internal use. No need to call it inlined
      */
-    fun build() = CustomBuilder(this)
+    fun build(): CustomBuilder {
+        println("build")
+        return CustomBuilder(this)
+    }
 }

@@ -1,21 +1,22 @@
 package de.miraculixx.headifier.utils.gui.data
 
 import de.miraculixx.headifier.utils.messages.*
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.Container
 import net.minecraft.world.MenuProvider
+import net.minecraft.world.SimpleContainer
 import net.minecraft.world.entity.player.Player
 
-interface CustomInventory : MenuProvider {
-    val inventory: Container
-    val viewers: MutableList<Player>
-    val id: String
+abstract class CustomInventory(size: Int) : SimpleContainer(size), MenuProvider {
+    abstract val viewers: MutableList<Player>
+    abstract val id: String
 
     /**
      * Get the final inventory object for further operations.
      * @return Crafted storage GUI
      */
     fun get(): Container {
-        return inventory
+        return this
     }
 
     /**
@@ -23,7 +24,7 @@ interface CustomInventory : MenuProvider {
      */
     fun close() {
         viewers.forEach {
-            inventory.stopOpen(it)
+            stopOpen(it)
         }
         viewers.clear()
     }
@@ -35,7 +36,7 @@ interface CustomInventory : MenuProvider {
      */
     fun close(player: Player): Boolean {
         return if (viewers.contains(player)) {
-            inventory.stopOpen(player)
+            stopOpen(player)
             true
         } else false
     }
@@ -46,7 +47,7 @@ interface CustomInventory : MenuProvider {
      */
     fun open(player: Player) {
         if (debug) consoleAudience?.sendMessage(prefix + cmp("Open GUI '$id' to ${player.scoreboardName}"))
-        inventory.startOpen(player)
+        (player as ServerPlayer).openMenu(this)
     }
 
     /**
@@ -54,9 +55,6 @@ interface CustomInventory : MenuProvider {
      * @param players Target Player collection
      */
     fun open(players: Collection<Player>) {
-        players.forEach {
-            inventory.startOpen(it)
-            if (debug) consoleAudience?.sendMessage(prefix + cmp("Open GUI '$id' to ${it.scoreboardName}"))
-        }
+        players.forEach { open(it) }
     }
 }
