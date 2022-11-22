@@ -1,6 +1,6 @@
 package de.miraculixx.headifier.utils.gui.data
 
-import de.miraculixx.headifier.utils.gui.CustomBuilder
+import de.miraculixx.headifier.utils.gui.CustomInventoryBuilder
 
 object InventoryManager {
     /**
@@ -50,10 +50,5 @@ object InventoryManager {
      * Use storage GUIs to display a lot of content with a minimal of placeholders. They can be filtered, scrollable and supports menus
      * @author Miraculixx
      */
-    inline fun inventoryBuilder(id: String, builder: CustomBuilder.Builder.() -> Unit): CustomInventory {
-        println("?!?!")
-        val gui = CustomBuilder.Builder(id)
-        println("!!!")
-        return add(id, gui.apply(builder).build())
-    }
+    inline fun inventoryBuilder(id: String, builder: CustomInventoryBuilder.() -> Unit) = add(id, CustomInventoryBuilder(id).apply(builder).build())
 }

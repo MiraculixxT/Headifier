@@ -9,6 +9,7 @@ repositories {
     maven("https://maven.fabricmc.net/")
     maven("https://server.bbkr.space/artifactory/libs-release/")
     maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://maven.quiltmc.org/repository/release/")
 }
 
 dependencies {
@@ -22,11 +23,13 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0")
 
     // Fabric implementation
-    implementation(pluginDep("fabric-loom", "0.13-SNAPSHOT"))
+    implementation("net.fabricmc:fabric-loom:1.0-SNAPSHOT")
+    implementation("io.github.juuxel:loom-quiltflower:1.7.4")
 
     // Paper implementation
-    implementation(pluginDep("io.papermc.paperweight.userdev", "1.3.9"))
+    implementation("io.papermc.paperweight.userdev:io.papermc.paperweight.userdev.gradle.plugin:1.3.9")
     implementation(pluginDep("xyz.jpenilla.run-paper", "1.1.0"))
 
-    implementation(pluginDep("com.github.johnrengelman.shadow", "7.1.2"))
+    implementation("gradle.plugin.com.github.johnrengelman:shadow:7.1.2")
+    implementation(pluginDep("com.modrinth.minotaur", "2.+"))
 }

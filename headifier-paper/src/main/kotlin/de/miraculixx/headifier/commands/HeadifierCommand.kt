@@ -7,6 +7,7 @@ import de.miraculixx.headifier.utils.gui.items.getItem
 import de.miraculixx.headifier.utils.headCache
 import de.miraculixx.headifier.utils.messages.*
 import net.axay.kspigot.commands.*
+import net.minecraft.world.entity.player.Player
 import org.bukkit.Material
 
 class HeadifierCommand : LateInitLoading {
@@ -40,11 +41,15 @@ class HeadifierCommand : LateInitLoading {
                     val heads = headCache.getHeads(input)
                     println(1)
                     InventoryManager.inventoryBuilder("TEST") {
-                        println("?")
-                        player = sender.player
+                        println("set player -> ${sender.player is Player}")
+                        this.player = sender.player as Player
+                        println("size")
                         size = 1
+                        println("title")
                         title = cmp("Activate/Deactivate Heads", cHighlight)
+                        println("content")
                         content = mapOf(heads.first().getHead() to 4)
+                        println("finish")
                     }
                     println(2)
                 }

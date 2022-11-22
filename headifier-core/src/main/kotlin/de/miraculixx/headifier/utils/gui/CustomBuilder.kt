@@ -25,7 +25,7 @@ class CustomBuilder(
     override val inventory = get()
     override val viewers: MutableList<Player> = player.toMutableList()
 
-    private constructor(builder: Builder) : this(
+    constructor(builder: CustomInventoryBuilder) : this(
         builder.content,
         builder.title,
         builder.id,
@@ -35,49 +35,6 @@ class CustomBuilder(
         },
         builder.size
     )
-
-    class Builder(val id: String) {
-        /**
-         * Import items to the custom GUI.
-         */
-        var content: Map<ItemStack, Int> = emptyMap()
-
-        /**
-         * Connect players to this GUI instance. Providing no player will lead to an instant removal of this GUI from cache.
-         *
-         * Use [player] for only one player
-         */
-        var players: List<Player> = emptyList()
-
-        /**
-         * Connect a player to this GUI instance. Providing no player will lead to an instant removal of this GUI from cache.
-         *
-         * Use [players] for multi-view
-         */
-        var player: Player? = null
-
-        /**
-         * Sets the inventory title for this custom GUI.
-         */
-        var title: Component = emptyComponent()
-
-        /**
-         * Sets the inventory size. It defines the row count, [size] 2 will create a GUI with 18 slots (2 rows)
-         */
-        var size: Int = 1
-
-        /**
-         * Internal use. No need to call it inlined
-         */
-        fun build(): CustomInventory {
-            println("...")
-            return CustomBuilder(this)
-        }
-
-        init {
-            println("Hey")
-        }
-    }
 
     private fun build() {
         content.forEach { (item, slot) ->
@@ -129,21 +86,62 @@ class CustomBuilder(
             InventoryManager.remove(id)
             if (debug) consoleAudience?.sendMessage(prefix + cmp("Removing GUI '$id' from cache"))
         }
+        println("stop open")
     }
 
     override fun startOpen(player: Player) {
         viewers += player
+        println("start open")
     }
 
     init {
-        println("1")
+        println("init")
         if (viewers.isEmpty()) {
             consoleAudience?.sendMessage(prefix + cmp("Creating GUI without player - Unexpected behaviour", cError))
             InventoryManager.remove(id)
         } else {
+            println("fill placeholder")
             fillPlaceholder()
+            println("build")
             build()
+            println("open")
             open(viewers)
         }
     }
+}
+
+class CustomInventoryBuilder(val id: String) {
+    /**
+     * Import items to the custom GUI.
+     */
+    var content: Map<ItemStack, Int> = emptyMap()
+
+    /**
+     * Connect players to this GUI instance. Providing no player will lead to an instant removal of this GUI from cache.
+     *
+     * Use [player] for only one player
+     */
+    var players: List<Player> = emptyList()
+
+    /**
+     * Connect a player to this GUI instance. Providing no player will lead to an instant removal of this GUI from cache.
+     *
+     * Use [players] for multi-view
+     */
+    var player: Player? = null
+
+    /**
+     * Sets the inventory title for this custom GUI.
+     */
+    var title: Component = emptyComponent()
+
+    /**
+     * Sets the inventory size. It defines the row count, [size] 2 will create a GUI with 18 slots (2 rows)
+     */
+    var size: Int = 1
+
+    /**
+     * Internal use. No need to call it inlined
+     */
+    fun build() = CustomBuilder(this)
 }
