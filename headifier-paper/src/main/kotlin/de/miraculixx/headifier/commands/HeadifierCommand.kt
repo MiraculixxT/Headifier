@@ -3,12 +3,17 @@ package de.miraculixx.headifier.commands
 import com.mojang.brigadier.arguments.StringArgumentType
 import de.miraculixx.headifier.utils.entities.LateInitLoading
 import de.miraculixx.headifier.utils.gui.data.InventoryManager
+import de.miraculixx.headifier.utils.gui.item.itemStack
 import de.miraculixx.headifier.utils.gui.items.getItem
 import de.miraculixx.headifier.utils.headCache
 import de.miraculixx.headifier.utils.messages.*
 import net.axay.kspigot.commands.*
+import net.axay.kspigot.event.listen
 import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Items
 import org.bukkit.Material
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
+import org.bukkit.event.player.PlayerToggleSneakEvent
 
 class HeadifierCommand : LateInitLoading {
     private var validMaterials: List<String> = listOf("<error>")
@@ -40,6 +45,12 @@ class HeadifierCommand : LateInitLoading {
                     val input = getArgument<String>("material")
                     val heads = headCache.getHeads(input)
 
+                        InventoryManager.inventoryBuilder("TEST") {
+                            this.player = sender.player
+                            size = 1
+                            title = cmp("Activate/Deactivate Heads", cHighlight)
+                            content = mapOf(itemStack(Items.STONE, 1) {} to 4)
+                        }
                 }
             }
         }

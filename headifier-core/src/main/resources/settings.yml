@@ -1,0 +1,79 @@
+#-------------------- Head Item --------------------#
+#      Modify the final head item that can be       #
+#    obtained by any source of this Modification    #
+#---------------------------------------------------#
+
+# Replace the original name "Player Head" with the
+# heads name. (Block Name)
+# Values: true / false
+custom-name: true
+
+# Syntax for the custom name. Use <head-name> as placeholder for the internal head name.
+# Supports MiniMessage syntax (https://webui.adventure.kyori.net/)
+# Values: Text (single line)
+custom-name-syntax: "<blue><!i><head-name>"
+
+# Add a custom lore to the head. Use <head-name> as placeholder for the internal head name.
+# Supports MiniMessage syntax (https://webui.adventure.kyori.net/)
+# Values: Text (list)
+custom-lore:
+  - "<dark_gray><!i>Headified Block Head"
+
+# Add custom nbt data to the head. Only use it if you know what you are doing!
+# NBT Compound added to the root compound, no brackets {} needed. Adding NBT tags that
+# are already used like 'Display' causes errors!
+custom-nbt-data: ',InternalFlag:"Head by Headifier"'
+
+
+#-------------------- Obtain Tool --------------------#
+#   Adding a tool that drops the headified block on   #
+#                     block break                     #
+#-----------------------------------------------------#
+
+# Activate the crafting recipe for the obtaining tool.
+# Values: true / false
+tool-craftable: true
+
+# Define the crafting recipe for the obtaining tool.
+# Specify your items by a key character and define this character under tool-recipe-items.
+# Space defines empty slots.
+tool-recipe:
+  - ' QD'
+  - ' SQ'
+  - 'S  '
+
+# Now define your characters from tool-recipe with an item.
+# Values: <character>: '<mod-key>:<item-id>' (list)
+tool-recipe-items:
+  Q: 'minecraft:quartz'
+  D: 'minecraft:diamond_block'
+  S: 'minecraft:stick'
+
+# Display name for the tool. Supports MiniMessage syntax
+# Values: Text (single line)
+tool-name: '<light_purple><!i>Headifier'
+
+# Lore for the tool. Supports MiniMessage syntax
+# Values: Text (list)
+tool-lore:
+  - "<grey><!i>Break blocks to obtain their minified head"
+
+# FABRIC ONLY
+# Modify the tool texture by replacing 'config/headifier/headifier.png'
+
+# PAPER ONLY
+# Modify the tool material that will be used as default item.
+# Values: Material (normally item ID in uppercase)
+tool-material: 'GOLDEN_PICKAXE'
+
+# The maximal amount of uses until the tool breaks. Set this
+# to -1 to remove the limit.
+# Values: Integer
+tool-max-uses: 64
+
+# The cooldown between each usage. This cooldown is global for a player,
+# all tools will be affected. Otherwise, the same tool can be uses instantly
+# again if passed to another player.
+# Set this to -1 to remove cooldown.
+# Values: Integer
+tool-cooldown: 32

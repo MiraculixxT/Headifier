@@ -1,6 +1,7 @@
 package de.miraculixx.headifier.utils.gui.data
 
-import de.miraculixx.headifier.utils.gui.CustomInventoryBuilder
+import de.miraculixx.headifier.utils.gui.CustomBuilder
+import de.miraculixx.headifier.utils.gui.StorageGUI
 
 object InventoryManager {
     /**
@@ -50,5 +51,12 @@ object InventoryManager {
      * Use storage GUIs to display a lot of content with a minimal of placeholders. They can be filtered, scrollable and supports menus
      * @author Miraculixx
      */
-    inline fun inventoryBuilder(id: String, builder: CustomInventoryBuilder.() -> Unit) = add(id, CustomInventoryBuilder(id).apply(builder).build())
+    inline fun inventoryBuilder(id: String, builder: CustomBuilder.Builder.() -> Unit) = add(id, CustomBuilder.Builder(id).apply(builder).build())
+
+    /**
+     * Inline Builder for GUI type - Storages
+     * Use storage GUIs to display a lot of content with a minimal of placeholders. They can be filtered, scrollable and supports menus
+     * @author Miraculixx
+     */
+    inline fun storageBuilder(id: String, builder: StorageGUI.Builder.() -> Unit) = StorageGUI.Builder(id).apply(builder).build()
 }

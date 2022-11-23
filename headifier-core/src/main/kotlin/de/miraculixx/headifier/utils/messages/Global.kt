@@ -9,3 +9,4 @@ var debug = false
 
 val prefix = cmp("Headifier", cHighlight) + cmp(" >> ", NamedTextColor.DARK_GRAY)
 val noPlayer = prefix + cmp("You need to be a player to execute this command!", cError)
+fun invalidConfig(key: String) = prefix + cmp("Configuration section '$key' is invalid!", cError)

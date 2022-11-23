@@ -3,13 +3,20 @@ package de.miraculixx.headifier.utils.gui.item
 
 import de.miraculixx.headifier.utils.messages.jsonSerializer
 import net.kyori.adventure.text.Component
+import net.minecraft.data.recipes.ShapedRecipeBuilder
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.StringTag
+import net.minecraft.nbt.Tag
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.alchemy.Potion
 import net.minecraft.world.item.alchemy.PotionUtils
+import net.minecraft.world.item.crafting.CraftingRecipe
+import net.minecraft.world.item.enchantment.Enchantment
+import net.minecraft.world.item.enchantment.EnchantmentHelper
+import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.ItemLike
 import java.util.*
 
@@ -126,4 +133,60 @@ fun ItemStack.setSkullPlayer(player: ServerPlayer) {
     player.gameProfile.properties.get("textures")
         .map { it.value }
         .forEach(::setSkullTexture)
+}
+
+fun ItemStack.setCustomModel(int: Int) {
+    orCreateTag.putInt("CustomModelData", int)
+}
+
+fun ItemStack.printJSONData() {
+    println(item.toString() + "\n" + (tag?.asString ?: "No Tags"))
+}
+
+fun ItemStack.setPDCValue(key: String, value: String) {
+    getOrCreateTagElement("PublicBukkitValues").putString("de.miraculixx.api:$key", value)
+}
+
+fun ItemStack.setPDCValue(key: String, value: Int) {
+    getOrCreateTagElement("PublicBukkitValues").putInt("de.miraculixx.api:$key", value)
+}
+
+fun ItemStack.getPDCString(key: String): String? {
+    return getTagElement("PublicBukkitValues")?.getString("de.miraculixx.api:$key")
+}
+
+fun ItemStack.getPDCInt(key: String): Int? {
+    return getTagElement("PublicBukkitValues")?.getInt("de.miraculixx.api:$key")
+}
+
+fun ItemStack.getPDC(): CompoundTag {
+    return getOrCreateTagElement("PublicBukkitValues")
+}
+
+fun ItemStack.copyAsMaterial(material: Item): ItemStack {
+    val i = ItemStack(material, count)
+    i.tag = tag
+    return i
+}
+
+fun ItemStack.addHideFlags(flag: HideFlag) {
+    orCreateTag.putInt("HideFlags", orCreateTag.getInt("HideFlags") + flag.value)
+}
+
+fun ItemStack.addEnchantment(enchantment: Enchantment, level: Int) {
+    val listTag = orCreateTag.getList("Enchantments", 0)
+    listTag.add(EnchantmentHelper.storeEnchantment(
+        EnchantmentHelper.getEnchantmentId(enchantment),
+        level
+    ))
+    tag?.put("Enchantments", listTag)
+}
+
+fun ItemStack.removeEnchantment(enchantment: Enchantment) {
+    val listTag = orCreateTag.getList("Enchantments", 0)
+    listTag.remove(EnchantmentHelper.storeEnchantment(
+        EnchantmentHelper.getEnchantmentId(enchantment),
+        EnchantmentHelper.getItemEnchantmentLevel(enchantment, this)
+    ))
+    tag?.put("Enchantments", listTag)
 }
