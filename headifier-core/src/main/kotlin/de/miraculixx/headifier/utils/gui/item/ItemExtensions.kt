@@ -173,15 +173,6 @@ fun ItemStack.addHideFlags(flag: HideFlag) {
     orCreateTag.putInt("HideFlags", orCreateTag.getInt("HideFlags") + flag.value)
 }
 
-fun ItemStack.addEnchantment(enchantment: Enchantment, level: Int) {
-    val listTag = orCreateTag.getList("Enchantments", 0)
-    listTag.add(EnchantmentHelper.storeEnchantment(
-        EnchantmentHelper.getEnchantmentId(enchantment),
-        level
-    ))
-    tag?.put("Enchantments", listTag)
-}
-
 fun ItemStack.removeEnchantment(enchantment: Enchantment) {
     val listTag = orCreateTag.getList("Enchantments", 0)
     listTag.remove(EnchantmentHelper.storeEnchantment(

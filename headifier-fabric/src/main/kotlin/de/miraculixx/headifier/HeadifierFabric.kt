@@ -7,5 +7,6 @@ class HeadifierFabric: ModInitializer {
 
     override fun onInitialize() {
         println("Hello World")
+
     }
 }

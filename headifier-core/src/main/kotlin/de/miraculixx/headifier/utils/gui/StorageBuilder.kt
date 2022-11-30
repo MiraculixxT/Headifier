@@ -171,7 +171,7 @@ class StorageGUI(
                     else -> item
                 }
 
-                i.addEnchantment(Enchantments.MENDING, 1)
+                i.enchant(Enchantments.MENDING, 1)
                 i.addHideFlags(HideFlag.HIDE_ENCHANTS)
                 i
             } else item

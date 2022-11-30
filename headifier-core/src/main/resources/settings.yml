@@ -29,6 +29,9 @@ custom-nbt-data: ',InternalFlag:"Head by Headifier"'
 #   Adding a tool that drops the headified block on   #
 #                     block break                     #
 #-----------------------------------------------------#
+#     If you want to modify the texture, create a     #
+#  texturepack and override the custom model id 1009  #
+#-----------------------------------------------------#
 
 # Activate the crafting recipe for the obtaining tool.
 # Values: true / false
@@ -58,13 +61,10 @@ tool-name: '<light_purple><!i>Headifier'
 tool-lore:
   - "<grey><!i>Break blocks to obtain their minified head"
 
-# FABRIC ONLY
-# Modify the tool texture by replacing 'config/headifier/headifier.png'
-
-# PAPER ONLY
 # Modify the tool material that will be used as default item.
-# Values: Material (normally item ID in uppercase)
-tool-material: 'GOLDEN_PICKAXE'
+# To prevent forced client side installation on fabric servern no new item is added.
+# Values: <mod-key>:<item-id>
+tool-material: 'minecraft:golden_pickaxe'
 
 # The maximal amount of uses until the tool breaks. Set this
 # to -1 to remove the limit.
