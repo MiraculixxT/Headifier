@@ -1,71 +1,57 @@
 package de.miraculixx.headifier.commands
 
-import com.mojang.brigadier.arguments.StringArgumentType
-import de.miraculixx.headifier.utils.entities.LateInitLoading
-import de.miraculixx.headifier.utils.gui.data.InventoryManager
-import de.miraculixx.headifier.utils.gui.item.itemStack
 import de.miraculixx.headifier.utils.gui.items.getItem
 import de.miraculixx.headifier.utils.headCache
-import de.miraculixx.headifier.utils.messages.*
-import net.axay.kspigot.commands.*
-import net.axay.kspigot.event.listen
-import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.Items
-import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
-import org.bukkit.event.player.PlayerToggleSneakEvent
+import de.miraculixx.headifier.utils.messages.cError
+import de.miraculixx.headifier.utils.messages.cmp
+import de.miraculixx.headifier.utils.messages.plus
+import de.miraculixx.headifier.utils.messages.prefix
+import dev.jorel.commandapi.kotlindsl.commandTree
+import dev.jorel.commandapi.kotlindsl.itemStackArgument
+import dev.jorel.commandapi.kotlindsl.literalArgument
+import dev.jorel.commandapi.kotlindsl.playerExecutor
+import org.bukkit.Sound
+import org.bukkit.inventory.ItemStack
 
-class HeadifierCommand : LateInitLoading {
-    private var validMaterials: List<String> = listOf("<error>")
+class HeadifierCommand {
+    val command = commandTree("headifier") {
+        literalArgument("get") {
+            withPermission("headifier.command.get")
+            itemStackArgument("material") {
+                playerExecutor { player, args ->
+                    val item = args[0] as ItemStack
+                    val type = item.type
+                    if (!type.isBlock || type.isLegacy) {
+                        player.sendMessage(prefix + cmp("Please provide a valid block!", cError))
+                        return@playerExecutor
+                    }
 
-    val command = command("headifier") {
-        requires { ctx -> ctx.isPlayer }
-
-        literal("get") {
-            requires { ctx -> ctx.bukkitSender.hasPermission("headifier.command.get") }
-            argument<String>("material", StringArgumentType.word()) {
-                suggestList { ctx -> filterTabComplete(ctx.input) }
-                runs {
-                    val input = getArgument<String>("material")
-                    val head = headCache.getActivatedHeads(input).randomOrNull()
+                    val head = headCache.getActivatedHeads(type.name).randomOrNull()
                     if (head == null) {
                         player.sendMessage(prefix + cmp("No activated heads were found for this block!", cError))
-                        return@runs
+                        return@playerExecutor
                     }
                     player.inventory.addItem(head.getItem())
+                    player.playSound(player, Sound.ENTITY_ITEM_PICKUP, 1f, 1f)
                 }
             }
         }
 
-        literal("edit") {
-            requires { ctx -> ctx.bukkitSender.hasPermission("headifier.command.edit") }
-            argument<String>("material", StringArgumentType.word()) {
-                suggestList { ctx -> filterTabComplete(ctx.input) }
-                runs {
-                    val input = getArgument<String>("material")
-                    val heads = headCache.getHeads(input)
+        literalArgument("edit") {
+            withPermission("headifier.command.edit")
+            itemStackArgument("material") {
+                playerExecutor { player, args ->
+                    val item = args[0] as ItemStack
+                    val type = item.type
+                    if (!type.isBlock || type.isLegacy) {
+                        player.sendMessage(prefix + cmp("Please provide a valid block!", cError))
+                        return@playerExecutor
+                    }
 
-                        InventoryManager.inventoryBuilder("TEST") {
-                            this.player = sender.player
-                            size = 1
-                            title = cmp("Activate/Deactivate Heads", cHighlight)
-                            content = mapOf(itemStack(Items.STONE, 1) {} to 4)
-                        }
+                    val head = headCache.getActivatedHeads(type.name)
+                    // Create Inv
                 }
             }
         }
-    }
-
-    private fun filterTabComplete(input: String): List<String> {
-        val args = input.split(' ')
-        return validMaterials.filter {
-            it.startsWith(args.getOrNull(2) ?: "", true)
-        }
-    }
-
-    override fun loadData() {
-        validMaterials = Material.values().filter {
-            !it.isLegacy && it.isBlock && headCache.getHeads(it.name).isNotEmpty()
-        }.map { it.name }
     }
 }

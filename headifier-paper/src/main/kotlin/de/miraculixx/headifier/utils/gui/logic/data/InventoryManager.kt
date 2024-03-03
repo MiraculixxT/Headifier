@@ -1,7 +1,8 @@
-package de.miraculixx.headifier.utils.gui.data
+package de.miraculixx.webServer.utils.gui.logic.data
 
-import de.miraculixx.headifier.utils.gui.CustomBuilder
-import de.miraculixx.headifier.utils.gui.StorageGUI
+import de.miraculixx.headifier.utils.gui.logic.CustomAnimationGUI
+import de.miraculixx.headifier.utils.gui.logic.CustomGUI
+import de.miraculixx.webServer.utils.gui.logic.*
 
 object InventoryManager {
     /**
@@ -47,16 +48,36 @@ object InventoryManager {
     }
 
     /**
-     * Inline Builder for GUI type - Storages
+     * Inline Builder for GUI type - Custom
+     *
      * Use storage GUIs to display a lot of content with a minimal of placeholders. They can be filtered, scrollable and supports menus
      * @author Miraculixx
      */
-    inline fun inventoryBuilder(id: String, builder: CustomBuilder.Builder.() -> Unit) = add(id, CustomBuilder.Builder(id).apply(builder).build())
+    inline fun inventoryBuilder(id: String, builder: CustomGUI.Builder.() -> Unit) = add(id, CustomGUI.Builder(id).apply(builder).build())
 
     /**
      * Inline Builder for GUI type - Storages
+     *
      * Use storage GUIs to display a lot of content with a minimal of placeholders. They can be filtered, scrollable and supports menus
      * @author Miraculixx
      */
-    inline fun storageBuilder(id: String, builder: StorageGUI.Builder.() -> Unit) = StorageGUI.Builder(id).apply(builder).build()
+    inline fun storageBuilder(id: String, builder: StorageGUI.Builder.() -> Unit) = add(id, StorageGUI.Builder(id).apply(builder).build())
+
+    /**
+     * Inline Builder for GUI type - Scrolling
+     *
+     * Use scroll GUIs to display activation status for your settings. Should not contain more than 64 settings for best experience.
+     * @author Miraculixx
+     */
+    inline fun scrollBuilder(id: String, builder: ScrollGUI.Builder.() -> Unit) = add(id, ScrollGUI.Builder(id).apply(builder).build())
+
+    /**
+     * Inline Builder for GUI type - Settings
+     *
+     * Use settings GUIs to display 1-4 items in a central and compact design. Items will align to the center and with a one slot gap between
+     * @author Miraculixx
+     */
+    inline fun settingsBuilder(id: String, builder: SettingsGUI.Builder.() -> Unit) = add(id, SettingsGUI.Builder(id).apply(builder).build())
+
+    inline fun animationBuilder(id: String, builder: CustomAnimationGUI.Builder.() -> Unit) = add(id, CustomAnimationGUI.Builder(id).apply(builder).build())
 }

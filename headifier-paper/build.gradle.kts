@@ -6,5 +6,5 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":headifier-core", configuration = "namedElements"))
+    implementation(project(":headifier-core"))
 }

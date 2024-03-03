@@ -2,7 +2,7 @@ package de.miraculixx.headifier.utils.config
 
 import de.miraculixx.headifier.PluginManager
 import de.miraculixx.headifier.utils.messages.prefix
-import net.axay.kspigot.extensions.console
+import de.miraculixx.kpaper.extensions.console
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File

@@ -1,7 +1,5 @@
 package de.miraculixx.headifier
 
-import de.miraculixx.headifier.utils.gui.item.itemStack
-import de.miraculixx.headifier.utils.gui.item.setSkullTexture
 import de.miraculixx.headifier.utils.messages.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -11,14 +9,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
-import net.kyori.adventure.audience.Audience
-import net.minecraft.world.item.Items
 import java.io.File
+import java.net.URL
 import java.util.*
 
 class HeadCache(private val configFolder: File) {
     private var heads = emptyList<Head>()
     private var materialRegex = Regex("-|_")
+    private val base64Decoder = Base64.getDecoder()
     var ready = false
 
     fun getHeads(): List<Head> {
@@ -42,6 +40,8 @@ class HeadCache(private val configFolder: File) {
             }.map {
                 it.name = it.name.replace(Regex(".\\(.*\\).*"), "")
                 it.activated = status[it.uuid] ?: true
+                val decodedValue = String(base64Decoder.decode(it.value))
+                it.url = decodedValue.removeSuffix("\"}}}").removePrefix("{\"textures\":{\"SKIN\":{\"url\":\"")
                 it
             }
         } else {
@@ -81,10 +81,21 @@ class HeadCache(private val configFolder: File) {
         }
     }
 
+    /**
+     * @param name Display name
+     * @param value Encoded Base64 representation
+     * @param uuid Fixed owner UUID for stacking
+     * @param tags Head tags
+     * @param activated Whether this head should be in the loot table
+     * @param url Direct url to the skin
+     */
     @Serializable
-    data class Head(var name: String, val value: String, val uuid: String, val tags: String, var activated: Boolean = true) {
-        fun getHead() = itemStack(Items.PLAYER_HEAD) {
-            setSkullTexture(value, UUID.fromString(uuid))
-        }
-    }
+    data class Head(
+        var name: String,
+        val value: String,
+        val uuid: String,
+        val tags: String,
+        var activated: Boolean = true,
+        var url: String? = null
+        )
 }

@@ -1,4 +1,3 @@
-import BuildConstants.minecraftVersion
 
 plugins {
     kotlin("jvm")
@@ -11,8 +10,10 @@ repositories {
 }
 
 dependencies {
-    paperDevBundle("${minecraftVersion}-R0.1-SNAPSHOT")
-    implementation("net.axay","kspigot","1.19.0")
+    paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
+    compileOnly("de.miraculixx","kpaper","1.1.1")
+    compileOnly("dev.jorel:commandapi-bukkit-kotlin:9.2.0")
+    compileOnly("dev.jorel:commandapi-bukkit-shade:9.2.0")
 }
 
 tasks {

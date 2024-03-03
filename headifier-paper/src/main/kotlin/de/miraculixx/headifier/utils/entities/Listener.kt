@@ -1,7 +1,7 @@
 package de.miraculixx.headifier.utils.entities
 
-import net.axay.kspigot.event.SingleListener
-import net.axay.kspigot.event.unregister
+import de.miraculixx.kpaper.event.SingleListener
+import de.miraculixx.kpaper.event.unregister
 import org.bukkit.event.Event
 
 interface Listener<T : Event> {
